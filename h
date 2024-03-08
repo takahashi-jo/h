@@ -26,14 +26,15 @@ case $ACTION in
     ;;
   DELETE)
     if [ "$VERSION_MAJOR" -eq 3 ]; then
-      SELECTED=$(helm list --all-namespaces | awk '{print $1 " (" $2 ")"}' | fzf $FZF_OPTS --header-lines=1 --prompt="VERSION: $VERSION > ACTION: DELETE > CHARTS > ")
+      SELECTED=$(helm list --all-namespaces | awk '{print $1 " (" $2 ")"}' | fzf $FZF_OPTS --header-lines=1 --prompt="VERSION: $VERSION > ACTION: DELETE > CHART > ")
       if [ -z "$SELECTED" ]; then
         echo "No chart was selected." && exit 0
       fi
-      CHARTS=$(echo $SELECTED | awk '{print $1}')
+      CHART=$(echo $SELECTED | awk '{print $1}')
       NAMESPACE=$(echo $SELECTED | awk '{print $2}' | tr -d '()')
       echo "You are about to execute the following command to delete the chart:"
       CMD="helm delete $CHART --namespace=$NAMESPACE"
+      echo $CMD
       CONFIRM=$(echo -e "NO\nYES" | fzf $FZF_OPTS --prompt="Are you sure? (y/N) > ")
       if [ "$CONFIRM" == "YES" ]; then
         eval $CMD
@@ -42,12 +43,13 @@ case $ACTION in
       fi
     fi
     if [ "$VERSION_MAJOR" -eq 2 ]; then
-      CHARTS=$(helm list | awk '{print $1}' | fzf $FZF_OPTS --header-lines=1 --prompt="VERSION: $VERSION > ACTION: DELETE > CHARTS > ")
-      if [ -z "$CHARTS" ]; then
+      CHART=$(helm list | awk '{print $1}' | fzf $FZF_OPTS --header-lines=1 --prompt="VERSION: $VERSION > ACTION: DELETE > CHART > ")
+      if [ -z "$CHART" ]; then
         echo "No chart was selected." && exit 0
       fi
       echo "You are about to execute the following command to delete the chart:"
-      CMD="helm delete --purge $CHARTS"
+      CMD="helm delete --purge $CHART"
+      echo $CMD
       CONFIRM=$(echo -e "NO\nYES" | fzf $FZF_OPTS --prompt="Are you sure? (y/N) > ")
       if [ "$CONFIRM" == "YES" ]; then
         eval $CMD
