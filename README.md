@@ -67,7 +67,7 @@ chmod +x ~/bin/h
 To use the tool, simply execute:
 
 ```sh
-k
+. h
 ```
 
 ## License

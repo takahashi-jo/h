@@ -7,7 +7,7 @@ if [ -z "$VERSION" ]; then
   echo "No version was selected." && exit 0
 fi
 CMD="helmenv global $VERSION"
-echo $CMD && eval $CMD
+echo $CMD && eval $CMD && history -s "$CMD"
 
 VERSION_MAJOR=$(echo $VERSION | cut -d '.' -f1)
 
@@ -17,11 +17,11 @@ case $ACTION in
   GET)
     if [ "$VERSION_MAJOR" -eq 3 ]; then
       CMD="helm list --all-namespaces"
-      echo $CMD && eval $CMD
+      echo $CMD && eval $CMD && history -s "$CMD"
     fi
     if [ "$VERSION_MAJOR" -eq 2 ]; then
       CMD="helm list"
-      echo $CMD && eval $CMD
+      echo $CMD && eval $CMD && history -s "$CMD"
     fi
     ;;
   DELETE)
@@ -37,7 +37,7 @@ case $ACTION in
       echo $CMD
       CONFIRM=$(echo -e "NO\nYES" | fzf $FZF_OPTS --prompt="Are you sure? (y/N) > ")
       if [ "$CONFIRM" == "YES" ]; then
-        eval $CMD
+        eval $CMD && history -s "$CMD"
       else
         echo "Deletion cancelled." && exit 0
       fi
@@ -52,7 +52,7 @@ case $ACTION in
       echo $CMD
       CONFIRM=$(echo -e "NO\nYES" | fzf $FZF_OPTS --prompt="Are you sure? (y/N) > ")
       if [ "$CONFIRM" == "YES" ]; then
-        eval $CMD
+        eval $CMD && history -s "$CMD"
       else
         echo "Deletion cancelled." && exit 0
       fi
