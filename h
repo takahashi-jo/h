@@ -4,7 +4,7 @@ FZF_OPTS="--height 25% --border --reverse"
 
 VERSION=$(helmenv versions | grep -oE '[0-9]+\.[0-9]+\.[0-9]+'| fzf $FZF_OPTS --prompt="VERSION > ")
 if [ -z "$VERSION" ]; then
-  echo "No version was selected." && exit 0
+  echo "No version was selected." 
 fi
 CMD="helmenv global $VERSION"
 echo $CMD && eval $CMD && history -s "$CMD"
@@ -28,7 +28,7 @@ case $ACTION in
     if [ "$VERSION_MAJOR" -eq 3 ]; then
       SELECTED=$(helm list --all-namespaces | awk '{print $1 " (" $2 ")"}' | fzf $FZF_OPTS --header-lines=1 --prompt="VERSION: $VERSION > ACTION: DELETE > CHART > ")
       if [ -z "$SELECTED" ]; then
-        echo "No chart was selected." && exit 0
+        echo "No chart was selected." 
       fi
       CHART=$(echo $SELECTED | awk '{print $1}')
       NAMESPACE=$(echo $SELECTED | awk '{print $2}' | tr -d '()')
@@ -39,13 +39,13 @@ case $ACTION in
       if [ "$CONFIRM" == "YES" ]; then
         eval $CMD && history -s "$CMD"
       else
-        echo "Deletion cancelled." && exit 0
+        echo "Deletion cancelled." 
       fi
     fi
     if [ "$VERSION_MAJOR" -eq 2 ]; then
       CHART=$(helm list | awk '{print $1}' | fzf $FZF_OPTS --header-lines=1 --prompt="VERSION: $VERSION > ACTION: DELETE > CHART > ")
       if [ -z "$CHART" ]; then
-        echo "No chart was selected." && exit 0
+        echo "No chart was selected." 
       fi
       echo "You are about to execute the following command to delete the chart:"
       CMD="helm delete --purge $CHART"
@@ -54,11 +54,11 @@ case $ACTION in
       if [ "$CONFIRM" == "YES" ]; then
         eval $CMD && history -s "$CMD"
       else
-        echo "Deletion cancelled." && exit 0
+        echo "Deletion cancelled." 
       fi
     fi
     ;;
   *)
-    echo "No action was selected." && exit 0
+    echo "No action was selected." 
     ;;
 esac
